@@ -1,22 +1,49 @@
-const app = require("express")();
-const mongoose = require("mongoose")
+const { connectDatabase } = require("./database/database");
+const Blog = require("./model/blogModel");
+const express = require("express")
+const app = express();
 
-//Connecting to database
-mongoose.connect("mongodb+srv://CMS104F_db:CMS104F_db@cluster0.1o3topq.mongodb.net/?appName=Cluster0")
-.then(()=>{
-    console.log("Database connected successfully")
-})
+//nodejs lai form bata aako data parse gar vaneko ho 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
+
+//Database connection Function
+connectDatabase()
 
 
 //GET API ->/F
 app.get("/",(req,res)=>{
     res.json({
-        status : "3000",
+        status : 3000,
         message:"success"
     })
 })
 
+// CREATE Blog API - 
+app.post("/createBlog", async (req,res)=>{
+    const title = req.body.title;
+    const subTitle = req.body.subTitle;
+    const description = req.body.description;
 
+    //alternatives 
+
+
+    //Insert to database logic goes here
+    await Blog.create({
+        title : title,
+        subTitle : subTitle,
+        description : description
+    })
+    res.json ({
+        status : 3000,
+        message : "Blog Created Successfully"
+    })
+})
+
+//Alternative
+// res.status(2000).json({
+//     message : "Blog created successfully"
+// })
 
 app.listen(3000,(req,res)=>{
     console.log("Nodejs has started at port 3000")
