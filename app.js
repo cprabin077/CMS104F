@@ -19,7 +19,27 @@ app.get("/",(req,res)=>{
     })
 })
 
-// GET API -> All Blogs
+
+
+// CREATE Blog API - 
+app.post("/blogs", async (req,res)=>{
+    const title = req.body.title;
+    const subTitle = req.body.subTitle;
+    const description = req.body.description;
+
+    //Insert to database logic goes here
+    await Blog.create({
+        title : title,
+        subTitle : subTitle,
+        description : description
+    })
+    res.json ({
+        status : 3000,
+        message : "Blog Created Successfully"
+    })
+})
+
+// READ Blog API -> All Blogs
 app.get("/blogs",async (req,res)=>{
 
     //fetching /reading all blogs from Blog Model
@@ -40,8 +60,7 @@ app.get("/blogs",async (req,res)=>{
     }   
 })
 
-// GET API -> /blogs/:id (single blog)
-
+// READ Blog API -> /blogs/:id (single blog)
 app.get("/blogs/:id", async (req,res) => {
     const id = req.params.id
            // const {id} = req.params //ALTERNATIVE
@@ -58,10 +77,6 @@ app.get("/blogs/:id", async (req,res) => {
     //             data : blog
     //            })
     //     }
-//    res.status(300).json({
-//     message:"Blog fetched successfully",
-//     data : blog
-//    })
 
          //ALTERNATIVE
          const blog = await Blog.findById(id)
@@ -77,28 +92,40 @@ app.get("/blogs/:id", async (req,res) => {
          }
 })
 
-// CREATE Blog API - 
-app.post("/createBlog", async (req,res)=>{
-    const title = req.body.title;
-    const subTitle = req.body.subTitle;
-    const description = req.body.description;
+// Update Blog API
+app.patch("/blogs/:id",async (req,res)=>{
+    const id = req.params.id
+    
+    const title = req.body.title
+    const subTitle = req.body.subTitle
+    const description = req.body.description
 
-    //Insert to database logic goes here
-    await Blog.create({
-        title : title,
-        subTitle : subTitle,
-        description : description
+    // const {title, subTitle, description} = req.body //Alternative
+
+        await Blog.findByIdAndUpdate(id, {
+            title : title, //title
+            subTitle : subTitle, //subTitle 
+            description : description //description
+        })
+    
+    res.status(300).json({
+        message : "Blog updated successfully"
     })
-    res.json ({
-        status : 3000,
-        message : "Blog Created Successfully"
-    })
+
 })
 
-//AlLTERNATIVE
-// res.status(300).json({
-//     message : "Blog created successfully"
-// })
+// DELETE API
+app.delete("/blogs/:id", async (req,res) => {
+    const id = req.params.id // const {id} = req.params
+    
+        await Blog.findByIdAndDelete(id)
+    
+    res.status(300).json({
+        message : "Blog Deleted successfully"
+    })
+    
+})
+
 
 app.listen(3000,(req,res)=>{
     console.log("Nodejs has started at port 3000")

@@ -3,7 +3,9 @@ const Schema = mongoose.Schema
 
 const blogSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        // unique: true,
+        // require: true
     },
     subTitle: {
         type: String
