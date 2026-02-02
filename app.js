@@ -20,7 +20,7 @@ connectDatabase()
 //GET API ->/F
 app.get("/",(req,res)=>{
     res.json({
-        status : 3000,
+        status : 2000,
         message:"success"
     })
 })
@@ -40,7 +40,7 @@ app.post("/blogs", async (req,res)=>{
         description : description
     })
     res.json ({
-        status : 3000,
+        status : 2000,
         message : "Blog Created Successfully"
     })
 })
@@ -52,18 +52,20 @@ app.get("/blogs",async (req,res)=>{
     const blogs = await Blog.find() // find le array bhitra data read garxa
 
     // Check if blogs contains data or not
-    if(blogs.length == 0){
-        res.json({
-            status: 404,
-            message : "empty blogs"
-        })
-    }else{
-        res.json({
-            status: 300,
-            message: "Blogs fetched successfully",
-            blogs : blogs
-        })
-    }   
+    if (blogs.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: "No blogs found",
+          blogs: []
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: "Blogs fetched successfully",
+        blogs: blogs
+      });
+       
 })
 
 // READ Blog API -> /blogs/:id (single blog)
@@ -73,12 +75,12 @@ app.get("/blogs/:id", async (req,res) => {
 
     // const blog = await Blog.find({_id : id})  
     //     if(blog.length == 0){
-    //         res.status(300).json({
+    //         res.status(200).json({
     //             status: 404,
     //             message : "No blog found"
     //         })
     //     }else{
-    //         res.status(300).json({
+    //         res.status(200).json({
     //             message:"Blog fetched successfully",
     //             data : blog
     //            })
@@ -87,7 +89,7 @@ app.get("/blogs/:id", async (req,res) => {
          //ALTERNATIVE
          const blog = await Blog.findById(id)
          if(blog){
-            res.status(300).json({
+            res.status(200).json({
                 message : "Blog fetched successfully ",
                 data : blog
             })
@@ -114,7 +116,7 @@ app.patch("/blogs/:id",async (req,res)=>{
             description : description //description
         })
     
-    res.status(300).json({
+    res.status(200).json({
         message : "Blog updated successfully"
     })
 
@@ -126,13 +128,13 @@ app.delete("/blogs/:id", async (req,res) => {
     
         await Blog.findByIdAndDelete(id)
     
-    res.status(300).json({
+    res.status(200).json({
         message : "Blog Deleted successfully"
     })
     
 })
 
 
-app.listen(3000,(req,res)=>{
-    console.log("Nodejs has started at port 3000")
+app.listen(2000,(req,res)=>{
+    console.log("Nodejs has started at port 2000")
 })
