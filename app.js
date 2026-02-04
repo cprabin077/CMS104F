@@ -39,8 +39,7 @@ app.post("/blogs", async (req,res)=>{
         subTitle : subTitle,
         description : description
     })
-    res.json ({
-        status : 2000,
+    res.status(201).json ({
         message : "Blog Created Successfully"
     })
 })
